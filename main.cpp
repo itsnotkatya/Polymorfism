@@ -11,127 +11,346 @@
 // В конце распечатанного заказа вывести итоговую сумму за заказ
 
 #include <iostream>
+#include <vector>
+
 using namespace std;
 
-enum Pizza { Pepperoni, Hawaiian, FourCheese};
-enum SIZE {Small = 25, Medium = 30, Big = 35};
+//enum Pizza { Pepperoni, Hawaiian, FourCheese};
+enum SIZE {Small = 25, Medium = 30, Large = 35};
 
-class Pizzeria {
-protected:
-    int Price;
-    Pizza pizza;
-    SIZE Size;
+struct Ingridients {
     int Cheese;
     int Salt;
+};
 
+class Pizza {
+protected:
+    unsigned int Price;
+    SIZE size;
+    Ingridients * data;
+    string descripsion;
+    string name;
 public:
-    std::string Adress;
 
-    Pizzeria(std::string Adress) {
-        this -> Adress = Adress;
-    }
+    ~Pizza() {};
 
-    void callStuff () const {
-        cout << "How can I help you?" << endl;
-    }
+    virtual string getName() const = 0;
 
+    virtual string getDescription() const = 0;
 
-    int AddCheese (int &Cheese) {
-        int CheeseBonus = 0;
-        if (Cheese > 0) {
-            CheeseBonus = Cheese * 1.5 + 10;
-        }
-        return CheeseBonus;
-    };
+    virtual unsigned int getSize() const = 0;
 
-    int AddSalt (int &Salt) {
-        int SaltBonus = 0;
-        if (Salt > 0) {
-            SaltBonus = Salt * 0.5 + 10;
-        }
-        return SaltBonus;
-    };
+    virtual unsigned int getCheese() const = 0;
 
-    int setSize(SIZE &Size) {
-        int ChosenSize = 0;
-        if (Size > 0) {
-            ChosenSize = Size * 2;
-        }
-        return ChosenSize;
-    };
+    virtual unsigned int getSalt() const = 0;
 
-    int IncresePrice() {
-        int k = AddCheese(Cheese);
-        if (k > 0) { cout << "We`re gonna add " << Cheese << " g of cheese then" << endl;}
-        int t = AddSalt(Salt);
-        if (t > 0) { cout << "We`re gonna add " << Salt << " g of salt then" << endl;}
-        int m = setSize(Size);
-        Price += k + t + m;
-    }
+    virtual unsigned int getPrice() const = 0;
 
-    virtual void setPrice() {
-        int Bonus = IncresePrice();
-        Price += Bonus;
-    };
+    virtual void AddCheese(Ingridients cheese) = 0;
 
-    int getPrice() { return Price;};
+    virtual void AddSalt(Ingridients salt) = 0;
 
-    virtual void MakeOrder(Pizza pizza) {
-        int Cheese;
-        int Salt;
-        int Size;
-        cout << "What size do you want?" << endl;
-        cin >> Size;
-        cout << "Would you like to add some cheese on top? " << endl;
-        cin >> Cheese;
-        cout << "Salt? " << endl;
-        cin >> Salt;
-        switch (pizza) {
-            case Pepperoni:
-                setPrice();
+};
+
+class Pepperoni : public Pizza {
+public:
+
+    Pepperoni(SIZE size1) {
+        name = "Pepperoni";
+        descripsion = "Italian classic";
+        data->Cheese = 0;
+        data->Salt = 0;
+
+        switch (size) {
+            case 0:
+                this->size = Small;
+                cout << "Small size";
                 break;
-            case Hawaiian:
-                setPrice();
+            case 1:
+                this->size = Medium;
+                cout << "Medium size";
                 break;
-            case FourCheese:
-                setPrice();
+            case 2:
+                this->size = Large;
+                cout << "Large size";
+                break;
+            default:
+                this->size = Small;
+                cout << "Small size";
+                break;
+        }
+        Price = this -> size*10;
+    }
+
+    unsigned int getCheese() const override {
+        return data -> Cheese;
+    }
+
+    unsigned int getSalt() const override {
+        return data -> Salt;
+    }
+
+    string getName() const override {
+        return name;
+    }
+
+    string getDescription() const override {
+        return descripsion;
+    }
+
+    unsigned int getPrice() const override {
+        return Price;
+    }
+
+    void AddCheese(Ingridients ingridients) override {
+       int plusCheese = data -> Cheese;
+        Price += plusCheese * 7;
+    }
+
+    void AddSalt(Ingridients ingridients) override {
+        int plusSalt = data -> Salt;
+        Price += plusSalt * 2;
+    }
+};
+
+class Hawaiian : public Pizza {
+public:
+
+    Hawaiian(SIZE size1) {
+        name = "Hawaiian";
+        descripsion = "Who loves pineapple?";
+        data->Cheese = 0;
+        data->Salt = 0;
+
+        switch (size) {
+            case 0:
+                this->size = Small;
+                cout << "Small size";
+                break;
+            case 1:
+                this->size = Medium;
+                cout << "Medium size";
+                break;
+            case 2:
+                this->size = Large;
+                cout << "Large size";
+                break;
+            default:
+                this->size = Small;
+                cout << "Small size";
+                break;
+        }
+        Price = this -> size*10;
+    }
+
+    unsigned int getCheese() const override {
+        return data -> Cheese;
+    }
+
+    unsigned int getSalt() const override {
+        return data -> Salt;
+    }
+
+    string getName() const override {
+        return name;
+    }
+
+    string getDescription() const override {
+        return descripsion;
+    }
+
+    unsigned int getPrice() const override {
+        return Price;
+    }
+
+    void AddCheese(Ingridients ingridients) override {
+        int plusCheese = data -> Cheese;
+        Price += plusCheese * 5;
+    }
+
+    void AddSalt(Ingridients ingridients) override {
+        int plusSalt = data -> Salt;
+        Price += plusSalt * 2;
+    }
+};
+
+class FourCheese : public Pizza {
+public:
+
+    FourCheese(SIZE size1) {
+        name = "FourCheese";
+        descripsion = "Extra cheese";
+        data->Cheese = 0;
+        data->Salt = 0;
+
+        switch (size) {
+            case 0:
+                this->size = Small;
+                cout << "Small size";
+                break;
+            case 1:
+                this->size = Medium;
+                cout << "Medium size";
+                break;
+            case 2:
+                this->size = Large;
+                cout << "Large size";
+                break;
+            default:
+                this->size = Small;
+                cout << "Small size";
+                break;
+        }
+        Price = this -> size*10;
+    }
+
+    unsigned int getCheese() const override {
+        return data -> Cheese;
+    }
+
+    unsigned int getSalt() const override {
+        return data -> Salt;
+    }
+
+    string getName() const override {
+        return name;
+    }
+
+    string getDescription() const override {
+        return descripsion;
+    }
+
+    unsigned int getPrice() const override {
+        return Price;
+    }
+
+    void AddCheese(Ingridients ingridients) override {
+        int plusCheese = data -> Cheese;
+        Price += plusCheese * 10;
+    }
+
+    void AddSalt(Ingridients ingridients) override {
+        int plusSalt = data -> Salt;
+        Price += plusSalt * 2;
+    }
+};
+
+class Order {
+    vector <Pizza *> pizza;
+public:
+
+    void Increase (Pizza * pizza1) {
+        pizza.push_back(pizza1);
+    }
+
+    void TakeOrder() {
+        unsigned int TotalPrice;
+        int order = pizza.size();
+
+        for (int i = 0; i < order; i++) {
+            cout << "You ordered " << pizza[i] -> getName() << endl;
+            pizza[i] -> getDiscription() << endl;
+            cout << "Pizza size is " <<pizza[i] -> getSize() << endl;
+            cout << "Salt " << pizza[i] -> getSalt() << endl;
+            cout << "Cheese " << pizza[i] -> getCheese() << endl;
+
+            TotalPrice += pizza[i].Price;
+        }
+        cout << "Your total price will be " << TotalPrice;
+    }
+
+    void MakeOrder() {
+        string pizzaType;
+        SIZE pizzaSize;
+        int addCheese;
+        int addSalt;
+        int choise;
+        int size;
+        int cheese;
+        int salt;
+
+        cout << "Choose size:" << endl;
+        cout << "1. Small" << endl;
+        cout << "2. Medium" << endl;
+        cout << "3. Large" << endl;
+
+        cin >> size;
+        switch (size) {
+            case 1:
+                pizzaSize = Small;
+                break;
+            case 2:
+                pizzaSize = Medium;
+                break;
+            case 3:
+                pizzaSize = Large;
+                break;
+        }
+
+        cout << "Cheese?" << endl;
+        cout << "1. + 5g of cheese" << endl;
+        cout << "2. +15g of cheese" << endl;
+        cout << "3. nothing" << endl;
+
+        cin >> cheese;
+        switch (cheese) {
+            case 1:
+                addCheese = 5;
+                break;
+            case 2:
+                addCheese = 15;
+                break;
+            case 3:
+                addCheese = 0;
+                break;
+        }
+
+        cout << "Salt?" << endl;
+        cout << "1. + 1g of salt" << endl;
+        cout << "2. +2g of salt" << endl;
+        cout << "3. nothing" << endl;
+
+        cin >> salt;
+        switch (salt) {
+            case 1:
+                addSalt = 1;
+                break;
+            case 2:
+                addSalt = 2;
+                break;
+            case 3:
+                addSalt = 0;
+                break;
+        }
+
+        cin >> choise;
+        switch (choise) {
+            case 1:
+                new Pepperoni (pizzaSize);
+                break;
+            case 2:
+                new Hawaiian (pizzaSize);
+                break;
+            case 3:
+                new FourCheese (pizzaSize);
                 break;
         }
     }
 };
 
+
+
 int main() {
-    Pizzeria PizzaHut("Green ave, 113");
-    int Cheese;
-    int Salt;
-    int size;
-    int order;
     cout << " ヽ(*・ω・)ﾉ Hello, Pizza! ヽ(*・ω・)ﾉ" << endl;
     cout << "Choose pizza " << ::endl;
     cout << "-------------------------------- MENU -------------------------------------" << endl;
     cout << "1_________________________________________________________________Pepperoni" << endl;
     cout << "2__________________________________________________________________Hawaiian" << endl;
     cout << "3________________________________________________________________FourCheese" << endl;
-    cin >> order;
 
-
-    switch (order) {
-        case 1:
-            PizzaHut.MakeOrder(Pepperoni);
-            cout << "Your order in total will be " << PizzaHut.getPrice() << endl;
-            break;
-        case 2:
-            PizzaHut.MakeOrder(Hawaiian);
-            cout << "Your order in total will be " << PizzaHut.getPrice() << endl;
-            break;
-        case 3:
-            PizzaHut.MakeOrder(FourCheese);
-            cout << "Your order in total will be " << PizzaHut.getPrice() << endl;
-            break;
-        case 4:
-            PizzaHut.callStuff();
-            break;
-    }
+   Order order;
+   order.MakeOrder();
+   order.TakeOrder();
 
 
     return 0;
